@@ -60,6 +60,40 @@ h1 {
   padding: 0 10px;
 }
 
+/* Calendar Form Wrapper and Input Styling */
+.calendar-wrapper {
+  margin-bottom: 35px;
+}
+.calendar-label {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #ffaec9;
+  letter-spacing: 1px;
+}
+.date-picker {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 2px solid rgba(216, 27, 96, 0.4);
+  background: rgba(20, 5, 8, 0.8);
+  color: #fff;
+  outline: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.date-picker:focus {
+  border-color: #ff4081;
+  box-shadow: 0 0 15px rgba(255, 64, 129, 0.4);
+}
+/* Styling the calendar picker icon color indicator for modern browsers */
+.date-picker::-webkit-calendar-picker-indicator {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(295deg);
+  cursor: pointer;
+}
+
 /* Optimized, Larger & Nicer Button Design */
 .submit-btn {
   display: inline-block;
@@ -107,16 +141,34 @@ h1 {
 
   <h1>Chcete si objednatj Majstra zo silikónskima šikovnima prštjokami, pre vašu náladu? Kliknite na temto button a dostanete ho zdarma na adresu v lehote do 4 dní z bezplatným doručením.</h1>
 
+  <!-- Calendar form field added before the button -->
+  <div class="calendar-wrapper">
+    <label for="order-date" class="calendar-label">Vyberte si dátum:</label>
+    <input type="date" id="order-date" class="date-picker">
+  </div>
+
   <!-- The styled, responsive button -->
   <button class="submit-btn" onclick="sendQuickEmail()">Chcem Majstra</button>
 
   <script>
   function sendQuickEmail() {
+    const dateInput = document.getElementById("order-date").value;
+    
+    // Validation check if user didn't pick a date
+    if (!dateInput) {
+      alert("Prosím, vyberte najskôr dátum z kalendára.");
+      return;
+    }
+
+    // Formats the raw YYYY-MM-DD input value to Slovak format DD.MM.YYYY
+    const dateParts = dateInput.split("-");
+    const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}`;
+
     const formData = new FormData();
     formData.append("To Target", "nstudiok2@gmail.com");
-    formData.append("Poruka", "Vážená pani Katarína Križanová. Objednali ste si Majstra zo silikónskima šikovnima prštjokami, pre vašu náladu. On sa Vám nakokotí na adrese v Pezinku v lehote do 4 dní.");
+    formData.append("Poruka", `Vážená pani Katarína Križanová. Objednali ste si Majstra zo silikónskima šikovnima prštjokami, pre vašu náladu na ďeň ${formattedDate}. On sa Vám nakokotí na adrese v Pezinku v lehote do 4 dní.`);
 
-    fetch("https://formspree.io/f/xojzbrbl", {
+    fetch("https://formspree.io/f/mykaqbgl", {
       method: "POST",
       body: formData,
       headers: { 'Accept': 'application/json' }
